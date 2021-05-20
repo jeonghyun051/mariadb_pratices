@@ -56,6 +56,58 @@ public class AuthorDao {
 		return result;
 	}
 
+	public AuthorVo findById(int no) {
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			conn = getConnection();
+			String sql = "select name from author where no = ?";
+
+			// 3. sql문 준비
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setLong(1, no);
+
+			// 4. SQL문을 실행
+			rs = pstmt.executeQuery();
+
+			// 5. 결과 가져오기
+			while(rs.next()) {
+				String name = rs.getString(1);
+				AuthorVo vo = new AuthorVo();
+				vo.setName(name);
+				
+				return vo;
+
+			}
+			
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+
+				if (conn != null) {
+					conn.close();
+				}
+
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+	
+		}
+		return null;
+	}
+
 	public List<AuthorVo> findAll() {
 
 		List<AuthorVo> result = new ArrayList<>();
@@ -114,7 +166,7 @@ public class AuthorDao {
 		try {
 
 			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mysql://192.168.254.35:3307/employees?charset=utf-8";
+			String url = "jdbc:mysql://192.168.254.35:3307/webdb?charset=utf-8";
 			conn = DriverManager.getConnection(url, "webdb", "webdb");
 		} catch (ClassNotFoundException e) {
 			System.out.println("드라이버 로딩 실패");

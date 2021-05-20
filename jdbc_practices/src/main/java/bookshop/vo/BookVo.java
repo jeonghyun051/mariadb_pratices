@@ -1,6 +1,6 @@
 package bookshop.vo;
 
-public class Book {
+public class BookVo {
 	
 	private int no;
 	private String title;
