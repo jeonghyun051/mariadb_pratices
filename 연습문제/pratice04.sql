@@ -26,20 +26,40 @@ where e.emp_no = a.emp_no;
 
 -- 문제3.
 -- 현재, 자신의 부서 평균 급여보다 연봉(salary)이 많은 사원의 사번, 이름과 연봉을 조회하세요 
+select e.emp_no, e.first_name, s.salary
+from dept_emp ed, employees e, salaries s, (
+	select d.dept_no,s.salary as 'sa'
+	from salaries s, departments d, dept_emp de
+	where s.emp_no = de.emp_no and de.dept_no = d.dept_no
+	group by d.dept_name) a
+where ed.emp_no = e.emp_no and e.emp_no = s.emp_no and a.dept_no = ed.dept_no
+and s.salary > sa
+order by s.salary asc;
 
-select d.dept_no, s.salary
-from departments d, salaries s, dept_emp de
-where s.emp_no = de.emp_no and de.dept_no = d.dept_no and (d.dept_no, s.salary) =any(
-select d.dept_no,(s.salary)
-from salaries s, departments d, dept_emp de
-where s.emp_no = de.emp_no and de.dept_no = d.dept_no
-group by d.dept_name);
 
 -- 문제4.
 -- 현재, 사원들의 사번, 이름, 매니저 이름, 부서 이름으로 출력해 보세요.
+select e.emp_no, e.first_name, d.dept_name, d.dept_no, a.first_name
+from employees e, dept_emp de, departments d, (
+	select dm.dept_no, e.first_name 
+	from dept_manager dm, employees e
+	where dm.emp_no = e.emp_no and dm.to_date='9999-01-01'
+	) a
+where e.emp_no = de.emp_no and de.dept_no = d.dept_no and d.dept_no = a.dept_no
+order by emp_no;
+
 
 -- 문제5.
 -- 평균 연봉이 가장 높은 부서는(이름, 평균연봉)? 
+select avg(s.salary)
+from salaries s, dept_emp de, departments d
+where s.emp_no = de.emp_no and de.dept_no = d.dept_no and s.to_date='9999-01-01' and de.to_date='9999-01-01'
+group by d.dept_name;
+
+
+select * from salaries;
+select * from departments;
+
 
 -- 문제6.
 -- 현재, 평균연봉이 가장 높은 부서의 사원들의 사번, 이름, 직책, 연봉을 조회하고 연봉 순으로 출력하세요.
