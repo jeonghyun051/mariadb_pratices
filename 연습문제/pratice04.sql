@@ -51,19 +51,20 @@ order by emp_no;
 
 -- 문제5.
 -- 평균 연봉이 가장 높은 부서는(이름, 평균연봉)? 
-select avg(s.salary)
+select d.dept_name, avg(s.salary) as avg_salary
 from salaries s, dept_emp de, departments d
 where s.emp_no = de.emp_no and de.dept_no = d.dept_no and s.to_date='9999-01-01' and de.to_date='9999-01-01'
-group by d.dept_name;
-
-
-select * from salaries;
-select * from departments;
+group by d.dept_name
+order by avg_salary;
 
 
 -- 문제6.
 -- 현재, 평균연봉이 가장 높은 부서의 사원들의 사번, 이름, 직책, 연봉을 조회하고 연봉 순으로 출력하세요.
-
+select d.dept_no, d.dept_name, avg(s.salary) as avg_salary
+from salaries s, dept_emp de, departments d
+where s.emp_no = de.emp_no and de.dept_no = d.dept_no and s.to_date='9999-01-01' and de.to_date='9999-01-01'
+group by d.dept_name
+order by avg_salary;
 
 -- 문제7.
 -- 평균 연봉이 가장 높은 직책?
